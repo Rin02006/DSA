@@ -2,86 +2,97 @@
    1. ARRAY & BINARY SEARCH
 ========================= */
 
-let arr = [10, 20, 30];
+let arrayData = [10, 20, 30];
 
 function renderArray() {
     const visual = document.getElementById("array-visual");
     visual.innerHTML = "";
-    arr.forEach(v => {
-        const d = document.createElement("div");
-        d.className = "data-item";
-        d.innerText = v;
-        visual.appendChild(d);
+    arrayData.forEach(val => {
+        const box = document.createElement("div");
+        box.className = "data-item";
+        box.innerText = val;
+        visual.appendChild(box);
     });
-}
-
-function arrayInsert() {
-    const val = document.getElementById("array-input").value;
-    if (val === "") return;
-    arr.push(Number(val));
-    document.getElementById("array-input").value = "";
-    renderArray();
-}
-
-function arrayDelete() {
-    const val = Number(document.getElementById("array-input").value);
-    arr = arr.filter(x => x !== val);
-    document.getElementById("array-input").value = "";
-    renderArray();
-}
-
-function runBinarySearch() {
-    const target = Number(document.getElementById("bs-input").value);
-    arr.sort((a, b) => a - b);
-
-    let low = 0, high = arr.length - 1, found = -1;
-
-    while (low <= high) {
-        let mid = Math.floor((low + high) / 2);
-        if (arr[mid] === target) {
-            found = mid;
-            break;
-        }
-        if (arr[mid] < target) low = mid + 1;
-        else high = mid - 1;
-    }
-
-    document.getElementById("array-message").innerText =
-        found !== -1 ? "Found at index " + found : "Not found";
 }
 
 renderArray();
 
+function arrayInsert() {
+    const input = document.getElementById("array-input");
+    const value = Number(input.value);
+    if (isNaN(value)) return;
+
+    arrayData.push(value);
+    renderArray();
+    document.getElementById("array-message").innerText = "Inserted: " + value;
+    input.value = "";
+}
+
+function arrayDelete() {
+    const input = document.getElementById("array-input");
+    const value = Number(input.value);
+
+    const index = arrayData.indexOf(value);
+    if (index === -1) {
+        document.getElementById("array-message").innerText = "Value not found";
+        return;
+    }
+
+    arrayData.splice(index, 1);
+    renderArray();
+    document.getElementById("array-message").innerText = "Deleted: " + value;
+    input.value = "";
+}
+
+function runBinarySearch() {
+    const target = Number(document.getElementById("bs-input").value);
+    const sorted = [...arrayData].sort((a, b) => a - b);
+
+    let low = 0, high = sorted.length - 1;
+    while (low <= high) {
+        let mid = Math.floor((low + high) / 2);
+        if (sorted[mid] === target) {
+            document.getElementById("array-message").innerText =
+                "Found " + target + " at index " + mid + " (sorted array)";
+            return;
+        }
+        sorted[mid] < target ? low = mid + 1 : high = mid - 1;
+    }
+    document.getElementById("array-message").innerText = "Not found";
+}
+
 /* =========================
-   2. STACK (MAX 5)
+   2. STACK (LEFT → RIGHT)
 ========================= */
 
-let stack = [];
 const MAX_SIZE = 5;
+let stack = [];
 
 function renderStack() {
     const visual = document.getElementById("stack-visual");
     visual.innerHTML = "";
-    stack.slice().reverse().forEach(v => {
-        const d = document.createElement("div");
-        d.className = "data-item";
-        d.innerText = v;
-        visual.appendChild(d);
+    stack.forEach(item => {
+        const box = document.createElement("div");
+        box.className = "data-item";
+        box.innerText = item;
+        visual.appendChild(box);
     });
 }
 
 function stackPush() {
-    const val = document.getElementById("stack-input").value;
-    if (val === "") return;
+    const input = document.getElementById("stack-input");
+    const value = input.value.trim();
+    if (!value) return;
 
     if (stack.length >= MAX_SIZE) {
         document.getElementById("stack-message").innerText = "Stack Overflow!";
         return;
     }
 
-    stack.push(val);
-    document.getElementById("stack-input").value = "";
+    stack.push(value);
     renderStack();
+    document.getElementById("stack-message").innerText = "Pushed: " + value;
+    input.value = "";
 }
 
 function stackPop() {
@@ -89,63 +100,35 @@ function stackPop() {
         document.getElementById("stack-message").innerText = "Stack Underflow!";
         return;
     }
-    stack.pop();
+
+    const removed = stack.pop();
     renderStack();
+    document.getElementById("stack-message").innerText = "Popped: " + removed;
 }
 
 function stackPeek() {
+    if (stack.length === 0) {
+        document.getElementById("stack-message").innerText = "Stack is empty";
+        return;
+    }
     document.getElementById("stack-message").innerText =
-        stack.length ? "Top: " + stack[stack.length - 1] : "Stack empty";
+        "Top element: " + stack[stack.length - 1];
 }
 
 function stackDisplay() {
     document.getElementById("stack-message").innerText =
-        stack.length ? stack.join(", ") : "Stack empty";
+        "Stack: " + stack.join(", ");
 }
 
 /* =========================
-   2B. EXPRESSION CONVERTER
+   EXPRESSION CONVERTER
 ========================= */
-
-function precedence(op) {
-    if (op === '+' || op === '-') return 1;
-    if (op === '*' || op === '/') return 2;
-    return 0;
-}
-
-function infixToPostfix(exp) {
-    let stack = [], output = "";
-
-    for (let ch of exp) {
-        if (/[A-Za-z0-9]/.test(ch)) output += ch;
-        else if (ch === '(') stack.push(ch);
-        else if (ch === ')') {
-            while (stack.length && stack[stack.length - 1] !== '(')
-                output += stack.pop();
-            stack.pop();
-        } else {
-            while (stack.length && precedence(stack[stack.length - 1]) >= precedence(ch))
-                output += stack.pop();
-            stack.push(ch);
-        }
-    }
-    while (stack.length) output += stack.pop();
-    return output;
-}
-
-function infixToPrefix(exp) {
-    let rev = exp.split("").reverse().map(c =>
-        c === '(' ? ')' : c === ')' ? '(' : c
-    ).join("");
-    let postfix = infixToPostfix(rev);
-    return postfix.split("").reverse().join("");
-}
 
 function convertExpression() {
     const infix = document.getElementById("infix-input").value;
     document.getElementById("out-infix").innerText = infix;
-    document.getElementById("out-postfix").innerText = infixToPostfix(infix);
-    document.getElementById("out-prefix").innerText = infixToPrefix(infix);
+    document.getElementById("out-postfix").innerText = "(demo output)";
+    document.getElementById("out-prefix").innerText = "(demo output)";
 }
 
 /* =========================
@@ -157,20 +140,22 @@ let queue = [];
 function renderQueue() {
     const visual = document.getElementById("queue-visual");
     visual.innerHTML = "";
-    queue.forEach(v => {
-        const d = document.createElement("div");
-        d.className = "data-item";
-        d.innerText = v;
-        visual.appendChild(d);
+    queue.forEach(item => {
+        const box = document.createElement("div");
+        box.className = "data-item";
+        box.innerText = item;
+        visual.appendChild(box);
     });
 }
 
 function queueEnqueue() {
-    const val = document.getElementById("queue-input").value;
-    if (val === "") return;
-    queue.push(val);
-    document.getElementById("queue-input").value = "";
+    const input = document.getElementById("queue-input");
+    const value = input.value.trim();
+    if (!value) return;
+
+    queue.push(value);
     renderQueue();
+    input.value = "";
 }
 
 function queueDequeue() {
@@ -180,32 +165,62 @@ function queueDequeue() {
 }
 
 /* =========================
-   5. BST (LOGIC ONLY)
+   4 & 5. BST VISUALIZATION
 ========================= */
 
-let bst = [];
+let bstRoot = null;
+
+function BSTNode(val) {
+    this.val = val;
+    this.left = null;
+    this.right = null;
+}
+
+function insertBST(node, val) {
+    if (!node) return new BSTNode(val);
+    if (val < node.val) node.left = insertBST(node.left, val);
+    else node.right = insertBST(node.right, val);
+    return node;
+}
 
 function bstInsert() {
-    const val = Number(document.getElementById("bst-val").value);
-    if (isNaN(val)) return;
-    bst.push(val);
-    document.getElementById("bst-message").innerText = "Inserted: " + val;
+    const value = Number(document.getElementById("bst-val").value);
+    if (isNaN(value)) return;
+
+    bstRoot = insertBST(bstRoot, value);
+    document.getElementById("bst-message").innerText =
+        "Inserted: " + value;
 }
 
 function bstSearch() {
-    const val = Number(document.getElementById("bst-val").value);
-    document.getElementById("bst-message").innerText =
-        bst.includes(val) ? "Found in tree" : "Not found";
+    const value = Number(document.getElementById("bst-val").value);
+    let node = bstRoot;
+
+    while (node) {
+        if (node.val === value) {
+            document.getElementById("bst-message").innerText = "Found: " + value;
+            return;
+        }
+        node = value < node.val ? node.left : node.right;
+    }
+    document.getElementById("bst-message").innerText = "Not found";
+}
+
+function inorderTraversal(node, result) {
+    if (!node) return;
+    inorderTraversal(node.left, result);
+    result.push(node.val);
+    inorderTraversal(node.right, result);
 }
 
 function bstInorder() {
-    const sorted = bst.slice().sort((a, b) => a - b);
+    let result = [];
+    inorderTraversal(bstRoot, result);
     document.getElementById("bst-message").innerText =
-        "Inorder: " + sorted.join(", ");
+        "Inorder: " + result.join(", ");
 }
 
 function bstClear() {
-    bst = [];
+    bstRoot = null;
     document.getElementById("bst-message").innerText = "Tree cleared";
 }
-
