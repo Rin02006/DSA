@@ -1,0 +1,186 @@
+/* --- GIRLY TECH THEME VARIABLES --- */
+:root {
+    /* Soft Pink to Peach Gradient */
+    --primary-gradient: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+    /* Lavender to Blue Gradient */
+    --secondary-gradient: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+    /* Text Colors */
+    --text-dark: #4a4e69;
+    --text-light: #9a8c98;
+    /* Background */
+    --bg-color: #fffdfd;
+}
+
+body {
+    padding-top: 70px;
+    background-color: var(--bg-color);
+    font-family: 'Quicksand', sans-serif; 
+    color: var(--text-dark);
+    background-image: radial-gradient(#fecfef 1px, transparent 1px);
+    background-size: 20px 20px; /* Cute polka dot pattern */
+}
+
+/* --- NAVBAR --- */
+.navbar {
+    background: var(--secondary-gradient) !important;
+    box-shadow: 0 4px 20px rgba(251, 194, 235, 0.4);
+    padding: 15px 0;
+    backdrop-filter: blur(10px);
+}
+.navbar-brand {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 800;
+    font-size: 1.5rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+.nav-link {
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s;
+}
+.nav-link:hover {
+    color: #fff !important;
+    transform: translateY(-2px);
+    text-shadow: 0 0 8px rgba(255,255,255,0.8);
+}
+
+/* --- HEADINGS --- */
+h1, h2, h3, h5 {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 800;
+    color: var(--text-dark);
+}
+
+.section-title {
+    position: relative;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+    color: #6d597a;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+.section-title::after {
+    content: '❤';
+    position: absolute;
+    font-size: 12px;
+    color: #ff9a9e;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* --- HERO SECTION --- */
+header {
+    background: var(--secondary-gradient);
+    border-bottom-left-radius: 50px;
+    border-bottom-right-radius: 50px;
+    box-shadow: 0 10px 30px rgba(161, 140, 209, 0.3);
+}
+
+/* --- CARDS & BOXES --- */
+.card, .demo-box, .member-card {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(255, 154, 158, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    padding: 25px;
+}
+
+.card:hover, .member-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(161, 140, 209, 0.3);
+}
+
+/* --- BUTTONS --- */
+.btn {
+    border-radius: 50px;
+    padding: 10px 25px;
+    font-weight: 700;
+    font-family: 'Raleway', sans-serif;
+    border: none;
+    transition: all 0.3s;
+}
+.btn-primary { background: var(--primary-gradient); color: #fff; }
+.btn-light { background: white; color: #a18cd1; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+.btn-outline-light:hover { background: white; color: #ff9a9e; }
+
+/* --- CUTE CODE EDITOR DESIGN --- */
+.code-window {
+    border-radius: 15px;
+    overflow: hidden;
+    margin-bottom: 25px;
+    border: none;
+    box-shadow: 0 15px 35px rgba(161, 140, 209, 0.4);
+    transition: transform 0.3s ease;
+}
+.code-window:hover { transform: translateY(-5px); }
+
+.code-header {
+    background: var(--secondary-gradient);
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.window-dots { display: flex; gap: 8px; margin-right: 15px; }
+.dot { width: 12px; height: 12px; border-radius: 50%; }
+.dot.red { background-color: #ff8fa3; }
+.dot.yellow { background-color: #ffe66d; }
+.dot.green { background-color: #80ed99; }
+
+.lang-label {
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.85rem;
+    margin-left: auto;
+    text-transform: uppercase;
+    opacity: 0.9;
+}
+
+.code-input {
+    width: 100%;
+    min-height: 250px;
+    background-color: #232136; /* Deep purple background */
+    color: #e0def4; /* Soft white text */
+    border: none;
+    padding: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem;
+    resize: vertical;
+    outline: none;
+    line-height: 1.5;
+}
+
+/* Visual Container for Stack/Queue/Array items */
+.visual-container {
+    min-height: 80px;
+    margin-top: 20px;
+    padding: 15px;
+    background-color: rgba(255,255,255,0.6);
+    border: 2px dashed #ff9a9e;
+    border-radius: 10px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+#stack-visual { flex-direction: column-reverse; } /* Stack logic */
+.data-item {
+    background: var(--primary-gradient);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-family: 'JetBrains Mono', monospace;
+    animation: popIn 0.3s;
+}
+@keyframes popIn { 0% { opacity: 0; transform: scale(0.5); } 100% { opacity: 1; transform: scale(1); } }
+
+footer {
+    background: linear-gradient(to right, #6d597a, #355070);
+    color: #ffcdb2;
+    padding: 20px;
+}
