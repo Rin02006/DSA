@@ -1,70 +1,184 @@
+/* =========================
+   ARRAY & BINARY SEARCH
+========================= */
+
+let array = [];
+
+function arrayInsert() {
+    const input = document.getElementById("array-input");
+    const value = input.value;
+    if (value === "") return;
+
+    array.push(Number(value));
+    input.value = "";
+    renderArray();
+}
+
+function arrayDelete() {
+    const input = document.getElementById("array-input");
+    const value = Number(input.value);
+
+    array = array.filter(v => v !== value);
+    input.value = "";
+    renderArray();
+}
+
+function runBinarySearch() {
+    const target = Number(document.getElementById("bs-input").value);
+    array.sort((a, b) => a - b);
+
+    let low = 0, high = array.length - 1;
+    let foundIndex = -1;
+
+    while (low <= high) {
+        let mid = Math.floor((low + high) / 2);
+        if (array[mid] === target) {
+            foundIndex = mid;
+            break;
+        } else if (array[mid] < target) {
+            low = mid + 1;
+        } else {
+            high = mid - 1;
+        }
+    }
+
+    document.getElementById("array-message").innerText =
+        foundIndex !== -1 ? "Found at index " + foundIndex : "Not found";
+}
+
+function renderArray() {
+    const visual = document.getElementById("array-visual");
+    visual.innerHTML = "";
+
+    array.forEach(value => {
+        const item = document.createElement("div");
+        item.className = "data-item";
+        item.innerText = value;
+        visual.appendChild(item);
+    });
+}
+
+/* =========================
+   STACK (MAX 5)
+========================= */
+
 let stack = [];
-let queue = [];
-let bst = null;
+const MAX_STACK = 5;
 
 function stackPush() {
-  const i = document.getElementById("stack-input");
-  if (!i.value) return;
-  stack.push(i.value);
-  i.value = "";
-  render(stack, "stack-visual");
-  document.getElementById("stack-message").textContent = "Stack size: " + stack.length;
+    const input = document.getElementById("stack-input");
+    const value = input.value;
+
+    if (value === "") return;
+
+    if (stack.length >= MAX_STACK) {
+        document.getElementById("stack-message").innerText = "Stack Overflow!";
+        return;
+    }
+
+    stack.push(value);
+    input.value = "";
+    renderStack();
 }
 
 function stackPop() {
-  stack.pop();
-  render(stack, "stack-visual");
+    if (stack.length === 0) {
+        document.getElementById("stack-message").innerText = "Stack Underflow!";
+        return;
+    }
+
+    stack.pop();
+    renderStack();
 }
 
+function stackPeek() {
+    document.getElementById("stack-message").innerText =
+        stack.length ? "Top element: " + stack[stack.length - 1] : "Stack empty";
+}
+
+function stackDisplay() {
+    document.getElementById("stack-message").innerText =
+        stack.length ? stack.join(", ") : "Stack empty";
+}
+
+function renderStack() {
+    const visual = document.getElementById("stack-visual");
+    visual.innerHTML = "";
+
+    stack.slice().reverse().forEach(value => {
+        const item = document.createElement("div");
+        item.className = "data-item";
+        item.innerText = value;
+        visual.appendChild(item);
+    });
+}
+
+/* =========================
+   QUEUE
+========================= */
+
+let queue = [];
+
 function queueEnqueue() {
-  const i = document.getElementById("queue-input");
-  if (!i.value) return;
-  queue.push(i.value);
-  i.value = "";
-  render(queue, "queue-visual");
+    const input = document.getElementById("queue-input");
+    const value = input.value;
+    if (value === "") return;
+
+    queue.push(value);
+    input.value = "";
+    renderQueue();
 }
 
 function queueDequeue() {
-  queue.shift();
-  render(queue, "queue-visual");
+    if (queue.length === 0) return;
+
+    queue.shift();
+    renderQueue();
 }
 
-function Node(v){this.v=v;this.l=null;this.r=null;}
-function insert(n,v){
-  if(!n) return new Node(v);
-  v<n.v ? n.l=insert(n.l,v) : n.r=insert(n.r,v);
-  return n;
+function renderQueue() {
+    const visual = document.getElementById("queue-visual");
+    visual.innerHTML = "";
+
+    queue.forEach(value => {
+        const item = document.createElement("div");
+        item.className = "data-item";
+        item.innerText = value;
+        visual.appendChild(item);
+    });
 }
 
-function bstInsert(){
-  const i=document.getElementById("bst-input");
-  if(!i.value) return;
-  bst=insert(bst,parseInt(i.value));
-  i.value="";
+/* =========================
+   BST (LOGIC ONLY)
+========================= */
+
+let bst = [];
+
+function bstInsert() {
+    const input = document.getElementById("bst-val");
+    const value = Number(input.value);
+
+    if (isNaN(value)) return;
+
+    bst.push(value);
+    input.value = "";
+    document.getElementById("bst-message").innerText = "Node inserted";
 }
 
-function traverse(n,a=[]){
-  if(!n) return;
-  traverse(n.l,a);a.push(n.v);traverse(n.r,a);
-  return a;
+function bstSearch() {
+    const value = Number(document.getElementById("bst-val").value);
+
+    document.getElementById("bst-message").innerText =
+        bst.includes(value) ? "Value found in tree" : "Value not found";
 }
 
-function bstTraverse(){
-  document.getElementById("bst-output").textContent =
-    bst ? traverse(bst).join(" → ") : "Empty";
+function bstInorder() {
+    const sorted = bst.slice().sort((a, b) => a - b);
+    document.getElementById("bst-message").innerText =
+        "Inorder Traversal: " + sorted.join(", ");
 }
 
-function bstClear(){
-  bst=null;
-  document.getElementById("bst-output").textContent="Cleared";
-}
-
-function render(arr,id){
-  const v=document.getElementById(id);
-  v.innerHTML="";
-  arr.forEach(x=>{
-    const d=document.createElement("div");
-    d.className="box";d.textContent=x;
-    v.appendChild(d);
-  });
+function bstClear() {
+    bst = [];
+    document.getElementById("bst-message").innerText = "Tree cleared";
 }
