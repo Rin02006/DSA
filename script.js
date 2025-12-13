@@ -14,7 +14,6 @@ function renderArray() {
         visual.appendChild(box);
     });
 }
-
 renderArray();
 
 function arrayInsert() {
@@ -31,8 +30,8 @@ function arrayInsert() {
 function arrayDelete() {
     const input = document.getElementById("array-input");
     const value = Number(input.value);
-
     const index = arrayData.indexOf(value);
+
     if (index === -1) {
         document.getElementById("array-message").innerText = "Value not found";
         return;
@@ -53,10 +52,10 @@ function runBinarySearch() {
         let mid = Math.floor((low + high) / 2);
         if (sorted[mid] === target) {
             document.getElementById("array-message").innerText =
-                "Found " + target + " at index " + mid + " (sorted array)";
+                `Found ${target} at index ${mid} (sorted array)`;
             return;
         }
-        sorted[mid] < target ? low = mid + 1 : high = mid - 1;
+        sorted[mid] < target ? low++ : high--;
     }
     document.getElementById("array-message").innerText = "Not found";
 }
@@ -121,17 +120,6 @@ function stackDisplay() {
 }
 
 /* =========================
-   EXPRESSION CONVERTER
-========================= */
-
-function convertExpression() {
-    const infix = document.getElementById("infix-input").value;
-    document.getElementById("out-infix").innerText = infix;
-    document.getElementById("out-postfix").innerText = "(demo output)";
-    document.getElementById("out-prefix").innerText = "(demo output)";
-}
-
-/* =========================
    3. QUEUE (FIFO)
 ========================= */
 
@@ -168,12 +156,17 @@ function queueDequeue() {
    4 & 5. BST VISUALIZATION
 ========================= */
 
+const canvas = document.getElementById("bst-canvas");
+const ctx = canvas.getContext("2d");
+
 let bstRoot = null;
 
 function BSTNode(val) {
     this.val = val;
     this.left = null;
     this.right = null;
+    this.x = 0;
+    this.y = 0;
 }
 
 function insertBST(node, val) {
@@ -188,8 +181,8 @@ function bstInsert() {
     if (isNaN(value)) return;
 
     bstRoot = insertBST(bstRoot, value);
-    document.getElementById("bst-message").innerText =
-        "Inserted: " + value;
+    drawTree();
+    document.getElementById("bst-message").innerText = "Inserted: " + value;
 }
 
 function bstSearch() {
@@ -206,13 +199,6 @@ function bstSearch() {
     document.getElementById("bst-message").innerText = "Not found";
 }
 
-function inorderTraversal(node, result) {
-    if (!node) return;
-    inorderTraversal(node.left, result);
-    result.push(node.val);
-    inorderTraversal(node.right, result);
-}
-
 function bstInorder() {
     let result = [];
     inorderTraversal(bstRoot, result);
@@ -220,7 +206,78 @@ function bstInorder() {
         "Inorder: " + result.join(", ");
 }
 
+function inorderTraversal(node, arr) {
+    if (!node) return;
+    inorderTraversal(node.left, arr);
+    arr.push(node.val);
+    inorderTraversal(node.right, arr);
+}
+
 function bstClear() {
     bstRoot = null;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     document.getElementById("bst-message").innerText = "Tree cleared";
 }
+
+/* ===== TREE DRAWING ===== */
+
+function drawTree() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    calculatePositions(bstRoot, canvas.width / 2, 40, canvas.width / 4);
+    drawConnections(bstRoot);
+    drawNodes(bstRoot);
+}
+
+function calculatePositions(node, x, y, gap) {
+    if (!node) return;
+    node.x = x;
+    node.y = y;
+    calculatePositions(node.left, x - gap, y + 70, gap / 2);
+    calculatePositions(node.right, x + gap, y + 70, gap / 2);
+}
+
+function drawConnections(node) {
+    if (!node) return;
+
+    if (node.left) {
+        drawLine(node, node.left);
+        drawConnections(node.left);
+    }
+    if (node.right) {
+        drawLine(node, node.right);
+        drawConnections(node.right);
+    }
+}
+
+function drawLine(parent, child) {
+    ctx.beginPath();
+    ctx.moveTo(parent.x, parent.y);
+    ctx.lineTo(child.x, child.y);
+    ctx.strokeStyle = "#a18cd1";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+}
+
+function drawNodes(node) {
+    if (!node) return;
+
+    drawCircle(node);
+    drawNodes(node.left);
+    drawNodes(node.right);
+}
+
+function drawCircle(node) {
+    ctx.beginPath();
+    ctx.arc(node.x, node.y, 18, 0, Math.PI * 2);
+    ctx.fillStyle = "#ff9a9e";
+    ctx.fill();
+    ctx.strokeStyle = "#6d597a";
+    ctx.stroke();
+
+    ctx.fillStyle = "#fff";
+    ctx.font = "bold 12px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(node.val, node.x, node.y);
+}
+
