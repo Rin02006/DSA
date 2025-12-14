@@ -1,0 +1,171 @@
+/* --- GIRLY TECH THEME VARIABLES --- */
+:root {
+    --primary-gradient: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+    --secondary-gradient: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+    --text-dark: #4a4e69;
+    --text-light: #9a8c98;
+    --bg-color: #fffdfd;
+}
+
+body {
+    padding-top: 70px;
+    background-color: var(--bg-color);
+    font-family: 'Quicksand', sans-serif;
+    color: var(--text-dark);
+    background-image: radial-gradient(#fecfef 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+/* --- NAVBAR --- */
+.navbar {
+    background: var(--secondary-gradient) !important;
+    box-shadow: 0 4px 20px rgba(251, 194, 235, 0.4);
+    padding: 15px 0;
+    backdrop-filter: blur(10px);
+}
+.navbar-brand {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 800;
+    font-size: 1.5rem;
+}
+.nav-link {
+    font-weight: 600;
+}
+.nav-link:hover {
+    color: #fff !important;
+}
+
+/* --- HEADINGS --- */
+h1, h2, h3, h5 {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 800;
+    color: var(--text-dark);
+}
+
+.section-title {
+    position: relative;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+    color: #6d597a;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+.section-title::after {
+    content: '❤';
+    position: absolute;
+    font-size: 12px;
+    color: #ff9a9e;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* --- CARDS & BOXES --- */
+.card, .demo-box, .member-card {
+    background: rgba(255,255,255,0.9);
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(255, 154, 158, 0.15);
+    padding: 25px;
+    text-align: center;
+}
+
+/* --- BUTTONS --- */
+.btn {
+    border-radius: 50px;
+    padding: 10px 25px;
+    font-weight: 700;
+}
+
+/* --- CODE WINDOW --- */
+.code-window {
+    border-radius: 15px;
+    overflow: hidden;
+    margin-bottom: 25px;
+    box-shadow: 0 15px 35px rgba(161, 140, 209, 0.4);
+}
+
+.code-header {
+    background: var(--secondary-gradient);
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+}
+
+.code-input {
+    width: 100%;
+    background-color: #232136;
+    color: #e0def4;
+    border: none;
+    padding: 20px;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* --- VISUAL CONTAINERS --- */
+.visual-container {
+    min-height: 80px;
+    margin-top: 20px;
+    padding: 15px;
+    background-color: rgba(255,255,255,0.6);
+    border: 2px dashed #ff9a9e;
+    border-radius: 10px;
+
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: nowrap;   /* keeps LEFT → RIGHT */
+}
+
+/* STACK VISUAL (LEFT → RIGHT) */
+#stack-visual {
+    flex-direction: row;
+}
+
+/* DATA ITEM BOX */
+.data-item {
+    background: var(--primary-gradient);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-family: 'JetBrains Mono', monospace;
+    animation: popIn 0.3s;
+}
+
+@keyframes popIn {
+    from { opacity: 0; transform: scale(0.5); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* --- MEMBER ROLE TEXT --- */
+.member-role {
+    color: #b56576;
+    font-weight: 600;
+    margin-top: 5px;
+}
+
+/* --- FOOTER --- */
+footer {
+    background: linear-gradient(to right, #6d597a, #355070);
+    color: #ffcdb2;
+    padding: 20px;
+}
+
+/* --- MOBILE SAFETY (NO DESIGN CHANGE) --- */
+@media (max-width: 768px) {
+    .visual-container {
+        overflow-x: auto;
+        touch-action: pan-x;
+    }
+}
+
+/* ===================================================
+   ✅ FIX: EVEN NAME HEIGHT (ABOUT PAGE)
+   =================================================== */
+.member-card h5 {
+    min-height: 48px;          /* SAME height for all names */
+    display: flex;
+    align-items: center;       /* vertical center */
+    justify-content: center;   /* horizontal center */
+    text-align: center;
+    margin-bottom: 5px;
+}
