@@ -362,4 +362,157 @@ function bstClear() {
     bstRoot = null;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     document.getElementById("bst-message").innerText = "Tree cleared";
+        } 
+/* =====================================================
+   FIX SECTION – REQUIRED FOR ALGORITHMS & EXPRESSIONS
+===================================================== */
+
+/* ---------- FIX 1: RUN BUTTON (algorithms.html) ---------- */
+function runAlgo(id) {
+    const out = document.getElementById(`output-${id}`);
+    if (!out) return;
+
+    switch (id) {
+        case 1: {
+            let a = +prompt("Enter A:");
+            let b = +prompt("Enter B:");
+            out.innerText = "Sum = " + (a + b);
+            break;
         }
+        case 2: {
+            let n = +prompt("Enter number:");
+            out.innerText = n % 2 === 0 ? "Even" : "Odd";
+            break;
+        }
+        case 3: {
+            let a = +prompt("A:"), b = +prompt("B:"), c = +prompt("C:");
+            out.innerText = "Max = " + Math.max(a, b, c);
+            break;
+        }
+        case 4: {
+            let n = +prompt("Enter number:");
+            let f = 1;
+            for (let i = 1; i <= n; i++) f *= i;
+            out.innerText = "Factorial = " + f;
+            break;
+        }
+        case 5: {
+            let t = +prompt("Terms:");
+            let fib = [0, 1];
+            for (let i = 2; i < t; i++)
+                fib.push(fib[i - 1] + fib[i - 2]);
+            out.innerText = fib.slice(0, t).join(", ");
+            break;
+        }
+        case 6: {
+            let n = +prompt("Enter number:");
+            let prime = n > 1;
+            for (let i = 2; i < n; i++)
+                if (n % i === 0) prime = false;
+            out.innerText = prime ? "Prime" : "Not Prime";
+            break;
+        }
+        case 7: {
+            let a = prompt("A:"), b = prompt("B:");
+            out.innerText = `A=${b}, B=${a}`;
+            break;
+        }
+        case 8: {
+            let t = +prompt("Find in [10,20,30]:");
+            out.innerText = [10,20,30].includes(t) ? "Found" : "Not Found";
+            break;
+        }
+        case 9: {
+            let s = prompt("Enter string:");
+            out.innerText = s.split("").reverse().join("");
+            break;
+        }
+        case 10: {
+            let r = +prompt("Radius:");
+            out.innerText = "Area = " + (Math.PI * r * r).toFixed(2);
+            break;
+        }
+    }
+}
+
+function runPseudo(id) {
+    runAlgo(id);
+}
+
+/* ---------- FIX 2: INFIX → POSTFIX / PREFIX ---------- */
+function precedence(op) {
+    if (op === "+" || op === "-") return 1;
+    if (op === "*" || op === "/") return 2;
+    if (op === "^") return 3;
+    return 0;
+}
+
+function infixToPostfix(exp) {
+    let stack = [];
+    let result = "";
+
+    for (let ch of exp.replace(/\s+/g, "")) {
+        if (/[a-zA-Z0-9]/.test(ch)) {
+            result += ch;
+        } else if (ch === "(") {
+            stack.push(ch);
+        } else if (ch === ")") {
+            while (stack.length && stack.at(-1) !== "(")
+                result += stack.pop();
+            stack.pop();
+        } else {
+            while (stack.length && precedence(stack.at(-1)) >= precedence(ch))
+                result += stack.pop();
+            stack.push(ch);
+        }
+    }
+    while (stack.length) result += stack.pop();
+    return result;
+}
+
+function infixToPrefix(exp) {
+    let rev = [...exp].reverse()
+        .map(c => c === "(" ? ")" : c === ")" ? "(" : c)
+        .join("");
+    return [...infixToPostfix(rev)].reverse().join("");
+}
+
+function convertExpression() {
+    const input = document.getElementById("infix-input").value;
+    if (!input) return alert("Enter infix expression");
+
+    document.getElementById("out-postfix").innerText =
+        infixToPostfix(input);
+    document.getElementById("out-prefix").innerText =
+        infixToPrefix(input);
+}
+
+/* ---------- FIX 3: FORCE GIRLY BST COLORS ---------- */
+drawLine = function (p, c) {
+    ctx.beginPath();
+    ctx.moveTo(p.x, p.y);
+    ctx.lineTo(c.x, c.y);
+    ctx.strokeStyle = "#f4a6c1"; // 🌸 pink lines
+    ctx.lineWidth = 2;
+    ctx.stroke();
+};
+
+drawCircle = function (node) {
+    ctx.beginPath();
+    ctx.arc(node.x, node.y, 26, 0, Math.PI * 2);
+
+    ctx.fillStyle =
+        node.visited || node.highlight ? "#ff9a9e" : "#ffc2d1";
+
+    ctx.fill();
+    ctx.strokeStyle = "#ff6f91"; // 💗 pink border
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    ctx.fillStyle = "#fff";
+    ctx.font = "bold 16px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(node.val, node.x, node.y);
+};
+
